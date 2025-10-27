@@ -15,3 +15,12 @@ class LOIForm(db.Model):
     customer_concentration_risk = db.Column(db.Text)
     deal_competitiveness = db.Column(db.Text)
     seller_note_open = db.Column(db.Boolean)
+
+    # ✅ New fields
+    cim_fit_narrative = db.Column(db.String(10))  # Yes/No
+    relate_to_narrative = db.Column(db.Text)
+    likes_dislikes = db.Column(db.Text)
+    questions_concerns = db.Column(db.Text)
+
+    uploaded_file = db.Column(db.String(255))  # store filename/path
+    confirm_terms = db.Column(db.Boolean)
