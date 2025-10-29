@@ -1,16 +1,20 @@
-from flask import Blueprint, request, redirect, url_for, render_template, send_file
+from flask import Blueprint, request, render_template
 from werkzeug.utils import secure_filename
+from app import db, mail
+from flask_mail import Message
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import os
+import requests
 from datetime import datetime
-from app import db
 from models import LOIForm
 
 loi_bp = Blueprint('loi_bp', __name__, url_prefix='/loi')
 
-UPLOAD_FOLDER = 'backend/static/uploads'
-PDF_FOLDER = 'backend/static/pdfs'
+# Define upload and PDF folders
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, '..', 'static', 'uploads', 'loi')
+PDF_FOLDER = os.path.join(BASE_DIR, '..', 'static', 'pdfs', 'loi')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PDF_FOLDER, exist_ok=True)
 
@@ -26,7 +30,7 @@ def loi_form():
             file_path = os.path.join(UPLOAD_FOLDER, filename)
             uploaded_file.save(file_path)
 
-        # Save form data to DB
+        # Save form data
         new_entry = LOIForm(
             full_name=request.form.get('full_name'),
             email=request.form.get('email'),
@@ -60,7 +64,7 @@ def loi_form():
         y = 800
         line_height = 22
         c.setFont("Helvetica-Bold", 14)
-        c.drawString(200, y, "Letter of Intent Summary")
+        c.drawString(180, y, "Letter of Intent Summary")
         y -= 40
         c.setFont("Helvetica", 11)
 
@@ -91,14 +95,54 @@ def loi_form():
             c.drawString(200, y, str(value or ""))
             y -= line_height
 
-            # New page if near bottom
             if y < 100:
                 c.showPage()
                 c.setFont("Helvetica", 11)
                 y = 800
 
         c.save()
+        print(f"PDF successfully saved at: {pdf_path}")
 
-        return send_file(pdf_path, as_attachment=True)
+        # --- Email Sending ---
+        try:
+            pdf_url = f"http://127.0.0.1:5000/static/pdfs/loi/{pdf_filename}"
+            msg = Message(
+                subject=f"New LOI Submission from {new_entry.full_name}",
+                recipients=["syeda.ghazia@bitandbytes.net"]
+            )
+            msg.body = (
+                f"A new LOI form has been submitted.\n\n"
+                f"Full Name: {new_entry.full_name}\n"
+                f"Email: {new_entry.email}\n"
+                f"Industry: {new_entry.industry}\n\n"
+                f"You can view or download the generated PDF here:\n{pdf_url}\n\n"
+                f"— DealForms PDF System"
+            )
+            mail.send(msg)
+            print("Email sent successfully to syeda.ghazia@bitandbytes.net")
+        except Exception as e:
+            print("Error sending email:", e)
+
+        # --- Slack Notification ---
+        try:
+            slack_webhook_url = os.getenv("SLACK_WEBHOOK_URL")
+            slack_message = {
+                "text": (
+                    f":page_facing_up: *New LOI Form Submitted!*\n"
+                    f"*Name:* {new_entry.full_name}\n"
+                    f"*Email:* {new_entry.email}\n"
+                    f"*Industry:* {new_entry.industry}\n"
+                    f"*PDF:* {pdf_url}"
+                )
+            }
+            response = requests.post(slack_webhook_url, json=slack_message)
+            if response.status_code == 200:
+                print("Slack notification sent successfully.")
+            else:
+                print(f"Failed to send Slack notification: {response.text}")
+        except Exception as e:
+            print("Error sending Slack notification:", e)
+
+        return '', 200
 
     return render_template('loi_form.html')

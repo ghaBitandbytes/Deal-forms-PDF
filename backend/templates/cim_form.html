@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIM Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #2c5aa0;
+      --secondary-blue: #3a7bd5;
+      --light-blue: #f0f7ff;
+      --dark-blue: #1e3a8a;
+      --accent-color: #ff6b6b;
+      --success-color: #28a745;
+      --text-dark: #2d3748;
+      --text-light: #718096;
+      --border-color: #e2e8f0;
+      --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --shadow-medium: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+    
+    .form-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-medium);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .form-container:hover {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .form-header {
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      color: white;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 0;
+    }
+    
+    .form-header h2 {
+      font-weight: 700;
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .form-content {
+      padding: 2.5rem;
+    }
+    
+    .form-section {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .form-section:last-of-type {
+      border-bottom: none;
+    }
+    
+    .section-title {
+      color: var(--primary-blue);
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--light-blue);
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 22px;
+      background: var(--primary-blue);
+      margin-right: 12px;
+      border-radius: 3px;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .form-control, .form-select {
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border-color);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      height: auto;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 0.25rem rgba(44, 90, 160, 0.15);
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-check-input {
+      width: 1.1em;
+      height: 1.1em;
+      margin-top: 0.15em;
+    }
+    
+    .form-check-input:checked {
+      background-color: var(--primary-blue);
+      border-color: var(--primary-blue);
+    }
+    
+    .form-check-label {
+      margin-left: 0.5rem;
+    }
+    
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      border: none;
+      color: white;
+      padding: 0.875rem 2.5rem;
+      font-weight: 600;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(44, 90, 160, 0.2);
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(44, 90, 160, 0.3);
+      background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+    }
+    
+    .required-field::after {
+      content: " *";
+      color: var(--accent-color);
+    }
+    
+    .file-upload-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .file-upload-wrapper input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .file-upload-style {
+      border: 1.5px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      background-color: #fafafa;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .file-upload-style:hover {
+      border-color: var(--primary-blue);
+      background-color: var(--light-blue);
+    }
+    
+    .file-upload-text {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+    
+    .file-upload-icon {
+      color: var(--primary-blue);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .terms-container {
+      background-color: var(--light-blue);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .divider {
+      border-top: 2px solid var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .form-content {
+        padding: 1.5rem;
+      }
+      
+      .form-header {
+        padding: 1.5rem;
+      }
+      
+      .form-header h2 {
+        font-size: 1.75rem;
+      }
+      
+      .btn-submit {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      body {
+        padding: 10px;
+      }
+      
+      .form-content {
+        padding: 1rem;
+      }
+      
+      .form-header {
+        padding: 1.25rem;
+      }
+      
+      .form-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="form-header">
+      <h2>CIM Form</h2>
+    </div>
+
+    <div class="form-content">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="form-section">
+          <h4 class="section-title">Business Information</h4>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label required-field">Full Name</label>
+              <input type="text" class="form-control" name="full_name" pattern="[A-Za-z ]+" title="Only letters and spaces allowed" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Email</label>
+              <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Industry</label>
+              <input type="text" class="form-control" name="industry" pattern="[A-Za-z ]+" title="Only letters and spaces allowed" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Location</label>
+              <input type="text" class="form-control" name="location" pattern="[A-Za-z0-9 ]+" title="Alphanumeric allowed" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Purchase Price</label>
+              <input type="number" class="form-control" name="purchase_price" min="0" step="0.01" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Revenue</label>
+              <input type="number" class="form-control" name="revenue" min="0" step="0.01" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Avg SDE</label>
+              <input type="number" class="form-control" name="avg_sde" min="0" step="0.01" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Seller Role</label>
+              <input type="text" class="form-control" name="seller_role" pattern="[A-Za-z ]+" title="Only letters and spaces allowed" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4 class="section-title">Business Details</h4>
+          <div class="mb-3">
+            <label class="form-label required-field">Reason for Selling</label>
+            <textarea class="form-control" name="reason_for_selling" rows="2" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required-field">Owner Involvement (role, hours/week)</label>
+            <textarea class="form-control" name="owner_involvement" rows="2" required></textarea>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label required-field">GM in place?</label>
+              <select class="form-select" name="gm_in_place" required>
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tenure of GM (if applicable)</label>
+              <input type="text" class="form-control" name="tenure_gm">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Number of Employees</label>
+              <input type="number" class="form-control" name="num_employees" min="0" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Total $ Adjustments</label>
+              <input type="number" class="form-control" name="total_adjustments" min="0" step="0.01" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+          <h4 class="section-title">Search Narrative Section</h4>
+          <div class="mb-4">
+            <label class="form-label required-field">Does the CIM fit your Search Narrative & Question Guide?</label>
+            <select name="search_narrative_fit" class="form-select" required>
+              <option value="">Select...</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label required-field">1. How does this relate to your search narrative?</label>
+            <textarea class="form-control" name="relate_to_narrative" rows="2" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label required-field">2. What do you like/don't like about the deal?</label>
+            <textarea class="form-control" name="likes_dislikes" rows="2" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label required-field">3. What questions/concerns do you have about the deal?</label>
+            <textarea class="form-control" name="questions_concerns" rows="2" required></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Upload Supporting Files</label>
+            <div class="file-upload-wrapper">
+              <div class="file-upload-style">
+                <div class="file-upload-icon">
+                  <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+                <div class="file-upload-text">Click to upload or drag and drop</div>
+                <input type="file" class="form-control" name="supporting_files">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="terms-container">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="confirm_terms" required>
+            <label class="form-check-label">
+              I confirm the terms and conditions — this data can be reviewed live on a call with others. We do not take any responsibility for it.
+            </label>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-submit btn-lg">Submit Information</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  // Letters-only fields
+  const lettersOnly = ['full_name', 'industry', 'seller_role'];
+  lettersOnly.forEach(id => {
+    const input = document.getElementsByName(id)[0];
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/[^A-Za-z ]/g, '');
+    });
+  });
+
+  // Alphanumeric fields
+  const alphanumFields = ['location'];
+  alphanumFields.forEach(id => {
+    const input = document.getElementsByName(id)[0];
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/[^A-Za-z0-9 ]/g, '');
+    });
+  });
+
+  // Numeric fields
+  const numericFields = ['purchase_price','revenue','avg_sde','num_employees','total_adjustments'];
+  numericFields.forEach(id => {
+    const input = document.getElementsByName(id)[0];
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/[^0-9.]/g, ''); // allow dot for decimals
+    });
+  });
+</script>
+
+<!-- Thank You Overlay -->
+<div id="thankYouOverlay" class="thank-you-overlay">
+  <div class="thank-you-card">
+    <div class="checkmark">✔</div>
+    <h4>Thank you for filling out the form!</h4>
+    <p>Your response has been submitted successfully.</p>
+  </div>
+</div>
+
+<style>
+  /* Overlay with blur background */
+  .thank-you-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+
+  .thank-you-card {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    animation: fadeInUp 0.5s ease;
+  }
+
+  .thank-you-card h4 {
+    color: #2c5aa0;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .thank-you-card p {
+    color: #555;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .checkmark {
+    font-size: 3rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  // Show thank-you overlay on form submit (preventing immediate PDF download)
+  document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault(); // stop normal form submission
+
+    // Send form data using Fetch
+    const formData = new FormData(this);
+    fetch(this.action || window.location.href, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Show the overlay
+          document.getElementById("thankYouOverlay").style.display = "flex";
+          // Optionally hide overlay after few seconds
+          setTimeout(() => {
+            document.getElementById("thankYouOverlay").style.display = "none";
+            this.reset();
+          }, 4000);
+        } else {
+          alert("Something went wrong while submitting.");
+        }
+      })
+      .catch(() => alert("Network error while submitting form."));
+  });
+</script>
+
+</body>
+</html>

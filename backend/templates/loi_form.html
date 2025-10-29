@@ -5,114 +5,545 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOI Form</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-purple: #6a11cb;
+      --secondary-purple: #8a2be2;
+      --light-purple: #f3e8fd;
+      --dark-purple: #4a0d8c;
+      --accent-color: #ff6b6b;
+      --text-dark: #333333;
+      --text-light: #6c757d;
+      --border-color: #e0e0e0;
+      --success-color: #28a745;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+    
+    .form-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(106, 17, 203, 0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .form-container:hover {
+      box-shadow: 0 15px 40px rgba(106, 17, 203, 0.15);
+    }
+    
+    .form-header {
+      background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 0;
+    }
+    
+    .form-header h2 {
+      font-weight: 700;
+      margin: 0;
+      font-size: 2rem;
+    }
+    
+    .form-content {
+      padding: 2.5rem;
+    }
+    
+    .form-section {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .form-section:last-of-type {
+      border-bottom: none;
+    }
+    
+    .section-title {
+      color: var(--primary-purple);
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--light-purple);
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 20px;
+      background: var(--primary-purple);
+      margin-right: 10px;
+      border-radius: 3px;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .form-control, .form-select {
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border-color);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      height: auto;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-purple);
+      box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.15);
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-check-input {
+      width: 1.1em;
+      height: 1.1em;
+      margin-top: 0.15em;
+    }
+    
+    .form-check-input:checked {
+      background-color: var(--primary-purple);
+      border-color: var(--primary-purple);
+    }
+    
+    .form-check-label {
+      margin-left: 0.5rem;
+    }
+    
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+      border: none;
+      color: white;
+      padding: 0.875rem 2.5rem;
+      font-weight: 600;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(106, 17, 203, 0.2);
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(106, 17, 203, 0.3);
+      background: linear-gradient(135deg, var(--secondary-purple), var(--primary-purple));
+    }
+    
+    .required-field::after {
+      content: " *";
+      color: var(--accent-color);
+    }
+    
+    .file-upload-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .file-upload-wrapper input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .file-upload-style {
+      border: 1.5px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      background-color: #fafafa;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .file-upload-style:hover {
+      border-color: var(--primary-purple);
+      background-color: var(--light-purple);
+    }
+    
+    .file-upload-text {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+    
+    .file-upload-icon {
+      color: var(--primary-purple);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .terms-container {
+      background-color: var(--light-purple);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .text-danger {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+    /* --- Thank You Overlay --- */
+    .thankyou-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .thankyou-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .thankyou-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 420px;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    .thankyou-box h3 {
+      color: var(--primary-purple);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .thankyou-box p {
+      color: var(--text-light);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .thankyou-box button {
+      background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.75rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .thankyou-box button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--secondary-purple), var(--primary-purple));
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .form-content {
+        padding: 1.5rem;
+      }
+      
+      .form-header {
+        padding: 1.5rem;
+      }
+      
+      .form-header h2 {
+        font-size: 1.75rem;
+      }
+      
+      .btn-submit {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      body {
+        padding: 10px;
+      }
+      
+      .form-content {
+        padding: 1rem;
+      }
+      
+      .form-header {
+        padding: 1.25rem;
+      }
+      
+      .form-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-5 mb-5">
-    <h2 class="mb-4 text-center">Letter of Intent (LOI) Form</h2>
+  <div class="form-container">
+    <div class="form-header">
+      <h2>Letter of Intent (LOI) Form</h2>
+    </div>
 
-    <!-- ✅ ONE unified form -->
-    <form method="POST" enctype="multipart/form-data">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-control" name="full_name" required>
+    <div class="form-content">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="form-section">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label required-field">Full Name</label>
+              <input type="text" class="form-control" name="full_name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required-field">Email</label>
+              <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Industry</label>
+              <input type="text" class="form-control" name="industry">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-control" name="location">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Purchase Price</label>
+              <input type="text" class="form-control" name="purchase_price">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Revenue</label>
+              <input type="text" class="form-control" name="revenue">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Average SDE</label>
+              <input type="text" class="form-control" name="avg_sde">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Seller Role</label>
+              <input type="text" class="form-control" name="seller_role">
+            </div>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" name="email" required>
+
+        <div class="form-section">
+          <div class="mb-3">
+            <label class="form-label">Reason for Selling</label>
+            <textarea class="form-control" name="reason_for_selling" rows="2"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Owner Involvement (role, hours/week)</label>
+            <textarea class="form-control" name="owner_involvement" rows="2"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Customer Concentration Risk</label>
+            <textarea class="form-control" name="customer_concentration_risk" rows="2"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deal Competitiveness</label>
+            <textarea class="form-control" name="deal_competitiveness" rows="2"></textarea>
+          </div>
+
+          <div class="form-check mt-4">
+            <input class="form-check-input" type="checkbox" name="seller_note_open" value="true" id="sellerNote">
+            <label class="form-check-label" for="sellerNote">Seller Open to a Seller Note?</label>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Industry</label>
-          <input type="text" class="form-control" name="industry">
+
+        <div class="form-section">
+          <h4 class="section-title">Search Narrative Section</h4>
+
+          <div class="mb-4">
+            <label class="form-label required-field">Does the CIM fit your Search Narrative & Question Guide?</label>
+            <select name="cim_fit_narrative" class="form-select" required>
+              <option value="">Select...</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">1. How does this relate to your search narrative?</label>
+            <textarea class="form-control" name="relate_to_narrative" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">2. What do you like/don't like about the deal?</label>
+            <textarea class="form-control" name="likes_dislikes" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">3. What questions/concerns do you have about the deal?</label>
+            <textarea class="form-control" name="questions_concerns" rows="2"></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Upload Supporting Files</label>
+            <div class="file-upload-wrapper">
+              <div class="file-upload-style">
+                <div class="file-upload-icon">
+                  <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+                <div class="file-upload-text">Click to upload or drag and drop</div>
+                <input type="file" class="form-control" name="supporting_files">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Location</label>
-          <input type="text" class="form-control" name="location">
+
+        <div class="terms-container">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="confirm_terms" required id="confirmTerms">
+            <label class="form-check-label" for="confirmTerms">
+              I confirm the terms and conditions — this data can be reviewed live on a call with others.
+              We do not take any responsibility for it.
+            </label>
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Purchase Price</label>
-          <input type="text" class="form-control" name="purchase_price">
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-submit btn-lg">Submit Information</button>
         </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Revenue</label>
-          <input type="text" class="form-control" name="revenue">
-        </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Average SDE</label>
-          <input type="text" class="form-control" name="avg_sde">
-        </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Seller Role</label>
-          <input type="text" class="form-control" name="seller_role">
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Reason for Selling</label>
-        <textarea class="form-control" name="reason_for_selling" rows="2"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Owner Involvement (role, hours/week)</label>
-        <textarea class="form-control" name="owner_involvement" rows="2"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Customer Concentration Risk</label>
-        <textarea class="form-control" name="customer_concentration_risk" rows="2"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Deal Competitiveness</label>
-        <textarea class="form-control" name="deal_competitiveness" rows="2"></textarea>
-      </div>
-
-      <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" name="seller_note_open" value="true" id="sellerNote">
-        <label class="form-check-label" for="sellerNote">Seller Open to a Seller Note?</label>
-      </div>
-
-      <hr class="my-4">
-      <h4>Search Narrative Section</h4>
-
-      <div class="mb-3 mt-3">
-        <label class="form-label">Does the CIM fit your Search Narrative & Question Guide?</label>
-        <select name="cim_fit_narrative" class="form-select" required>
-          <option value="">Select...</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">1. How does this relate to your search narrative?</label>
-        <textarea class="form-control" name="relate_to_narrative" rows="2"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">2. What do you like/don’t like about the deal?</label>
-        <textarea class="form-control" name="likes_dislikes" rows="2"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">3. What questions/concerns do you have about the deal?</label>
-        <textarea class="form-control" name="questions_concerns" rows="2"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Upload Supporting Files</label>
-        <input type="file" class="form-control" name="supporting_files">
-      </div>
-
-      <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" name="confirm_terms" required id="confirmTerms">
-        <label class="form-check-label" for="confirmTerms">
-          I confirm the terms and conditions — this data can be reviewed live on a call with others.
-          We do not take any responsibility for it.
-        </label>
-      </div>
-
-      <div class="text-center">
-        <button type="submit" class="btn btn-success btn-lg">Submit Information</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
+
+  <!-- Thank You Overlay -->
+  <div class="thankyou-overlay" id="thankYouOverlay">
+    <div class="thankyou-box">
+      <h3>Thank You!</h3>
+      <p>Your Letter of Intent (LOI) form has been submitted successfully.</p>
+      <button id="closeOverlayBtn">Close</button>
+    </div>
+  </div>
+
+
+
+
+
+  
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("form");
+  const overlay = document.getElementById("thankYouOverlay");
+  const closeBtn = document.getElementById("closeOverlayBtn");
+
+  // Input restrictions
+  const lettersOnly = ['full_name', 'industry', 'seller_role'];
+  lettersOnly.forEach(name => {
+    const field = form.elements[name];
+    if (field) {
+      field.addEventListener("input", () => {
+        field.value = field.value.replace(/[^A-Za-z ]/g, '');
+      });
+    }
+  });
+
+  const alphanumFields = ['location'];
+  alphanumFields.forEach(name => {
+    const field = form.elements[name];
+    if (field) {
+      field.addEventListener("input", () => {
+        field.value = field.value.replace(/[^A-Za-z0-9 ]/g, '');
+      });
+    }
+  });
+
+  const numericFields = ['purchase_price', 'revenue', 'avg_sde'];
+  numericFields.forEach(name => {
+    const field = form.elements[name];
+    if (field) {
+      field.addEventListener("input", () => {
+        field.value = field.value.replace(/[^0-9.]/g, '');
+      });
+    }
+  });
+
+
+
+
+
+  // Validators
+  const validators = {
+    full_name: val => /^[A-Za-z ]{2,}$/.test(val) ? "" : "Name must have at least 2 letters and no numbers.",
+    industry: val => val && !/^[A-Za-z ]+$/.test(val) ? "Industry must contain letters only." : "",
+    seller_role: val => val && !/^[A-Za-z ]+$/.test(val) ? "Seller Role must contain letters only." : "",
+    location: val => val && !/^[A-Za-z0-9 ]+$/.test(val) ? "Location can contain only letters, numbers, and spaces." : "",
+    email: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ? "" : "Enter a valid email address.",
+    purchase_price: val => val && !/^\d+(\.\d{1,2})?$/.test(val) ? "Purchase Price must be numeric only." : "",
+    revenue: val => val && !/^\d+(\.\d{1,2})?$/.test(val) ? "Revenue must be numeric only." : "",
+    avg_sde: val => val && !/^\d+(\.\d{1,2})?$/.test(val) ? "Average SDE must be numeric only." : "",
+    cim_fit_narrative: val => val ? "" : "Please select an option.",
+  };
+
+  // Add error divs and real-time validation
+  Object.keys(validators).forEach(name => {
+    const field = form.elements[name];
+    if (!field) return;
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "text-danger small mt-1";
+    field.parentNode.appendChild(errorDiv);
+    field.addEventListener("input", () => {
+      const error = validators[name](field.value.trim());
+      errorDiv.textContent = error;
+      field.style.borderColor = error ? "red" : "";
+    });
+  });
+
+
+  // Show thank-you overlay on form submit (preventing immediate PDF download)
+  document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault(); // stop normal form submission
+
+    // Send form data using Fetch
+    const formData = new FormData(this);
+    fetch(this.action || window.location.href, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Show the overlay
+          document.getElementById("thankYouOverlay").style.display = "flex";
+          // Optionally hide overlay after few seconds
+          setTimeout(() => {
+            document.getElementById("thankYouOverlay").style.display = "none";
+            this.reset();
+          }, 4000);
+        } else {
+          alert("Something went wrong while submitting.");
+        }
+      })
+      .catch(() => alert("Network error while submitting form."));
+  });
+});
+</script>
+
 </body>
 </html>
